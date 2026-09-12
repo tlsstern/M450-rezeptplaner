@@ -22,7 +22,7 @@ class IngredientEntityMapperTest {
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(ingredient.getId()).isEqualTo(id);
-        softly.assertThat(ingredient.getName()).isEqualTo("Potato");
+        softly.assertThat(ingredient.getName()).isEqualTo("Tomato");
         softly.assertThat(ingredient.getComment()).isEqualTo("The big ones");
         softly.assertThat(ingredient.getUnit()).isEqualTo(Unit.PIECE);
         softly.assertThat(ingredient.getAmount()).isEqualTo(5);
