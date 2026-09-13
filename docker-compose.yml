@@ -1,0 +1,12 @@
+services:
+  backend:
+    build: ./recipe-planner-backend
+    ports:
+      - "8081:8080"
+
+  frontend:
+    build: ./recipe-planner-fronend
+    ports:
+      - "3001:80"
+    depends_on:
+      - backend
