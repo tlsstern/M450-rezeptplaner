@@ -4,7 +4,7 @@ import axios from "axios";
 import Recipe from "../Recipe/Recipe";
 import {Col, Row} from "react-bootstrap";
 
-const baseURL = "http://localhost:8080/api/recipes";
+const baseURL = "/api/recipes";
 
 
 const Browse = () => {
