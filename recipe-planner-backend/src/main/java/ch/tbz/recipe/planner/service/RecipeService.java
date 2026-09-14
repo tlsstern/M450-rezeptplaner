@@ -41,9 +41,13 @@ public class RecipeService {
         if (recipe.getName() == null || recipe.getName().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name must not be empty");
         }
+        if (recipe.getIngredients() != null && recipe.getIngredients().stream().anyMatch(i -> i.getAmount() < 1)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Amount must be at least 1");
+        }
         if (repository.findById(recipeId).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
         }
+        // the id from the url counts, not the one in the body
         recipe.setId(recipeId);
         var updatedRecipe = repository.save(mapper.domainToEntity(recipe));
         return mapper.entityToDomain(updatedRecipe);

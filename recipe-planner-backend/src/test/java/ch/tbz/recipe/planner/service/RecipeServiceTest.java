@@ -1,6 +1,8 @@
 package ch.tbz.recipe.planner.service;
 
+import ch.tbz.recipe.planner.domain.Ingredient;
 import ch.tbz.recipe.planner.domain.Recipe;
+import ch.tbz.recipe.planner.domain.Unit;
 import ch.tbz.recipe.planner.entities.RecipeEntity;
 import ch.tbz.recipe.planner.mapper.RecipeEntityMapper;
 import ch.tbz.recipe.planner.repository.RecipeRepository;
@@ -67,6 +69,18 @@ class RecipeServiceTest {
     void updateRecipe_emptyName_throwsBadRequest() {
         UUID id = UUID.randomUUID();
         Recipe recipe = new Recipe(null, " ", "Description", "http://image.url", List.of());
+
+        assertThatThrownBy(() -> service.updateRecipe(id, recipe))
+                .isInstanceOf(ResponseStatusException.class)
+                .extracting("statusCode").isEqualTo(HttpStatus.BAD_REQUEST);
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void updateRecipe_amountZero_throwsBadRequest() {
+        UUID id = UUID.randomUUID();
+        Ingredient tomato = new Ingredient(null, "Tomato", null, Unit.PIECE, 0);
+        Recipe recipe = new Recipe(null, "Pizza", "Description", "http://image.url", List.of(tomato));
 
         assertThatThrownBy(() -> service.updateRecipe(id, recipe))
                 .isInstanceOf(ResponseStatusException.class)
