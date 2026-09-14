@@ -37,11 +37,11 @@ function EditRecipe() {
             </Form.Group>
             <Form.Group className="mb-1" controlId="editDescription">
                 <Form.Label>Description:</Form.Label>
-                <Form.Control name="description" value={recipe.description} onChange={handleChange}/>
+                <Form.Control name="description" value={recipe.description || ''} onChange={handleChange}/>
             </Form.Group>
             <Form.Group className="mb-3" controlId="editImageUrl">
                 <Form.Label>Image URL:</Form.Label>
-                <Form.Control name="imageUrl" value={recipe.imageUrl} onChange={handleChange}/>
+                <Form.Control name="imageUrl" value={recipe.imageUrl || ''} onChange={handleChange}/>
             </Form.Group>
             {error && <p>{error}</p>}
             <Button variant="primary" type="submit">Save</Button>
