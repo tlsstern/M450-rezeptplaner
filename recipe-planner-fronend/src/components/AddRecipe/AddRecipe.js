@@ -60,6 +60,7 @@ function AddRecipe() {
                         <br></br>
                     </Row>
                     {renderIngredients}
+                    {errors.ingredients && <p>Quantity must be at least 1</p>}
                     <Row>
                         <br></br>
                         <Button

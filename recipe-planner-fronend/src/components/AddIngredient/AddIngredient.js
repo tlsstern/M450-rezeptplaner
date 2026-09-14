@@ -25,7 +25,7 @@ const AddIngredient = ({index, register, removeIngredient}) => {
             <Col>
                 <Form.Group className="mb-1">
                     <Form.Control type="number" placeholder="Quantity"
-                                  {...register(`ingredients.${index}.amount`, {valueAsNumber: true})}/>
+                                  {...register(`ingredients.${index}.amount`, {valueAsNumber: true, required: true, min: 1})}/>
                 </Form.Group>
             </Col>
             <Col xs={1}>
