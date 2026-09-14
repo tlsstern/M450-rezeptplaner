@@ -7,9 +7,12 @@ function EditRecipe() {
     const {id} = useParams()
     const navigate = useNavigate()
     const [recipe, setRecipe] = useState(null)
+    const [error, setError] = useState(null)
 
     useEffect(() => {
-        axios.get(`/api/recipes/recipe/${id}`).then(response => setRecipe(response.data))
+        axios.get(`/api/recipes/recipe/${id}`)
+            .then(response => setRecipe(response.data))
+            .catch(() => setError("Recipe not found"))
     }, [id])
 
     const handleChange = (e) => {
@@ -18,10 +21,12 @@ function EditRecipe() {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        axios.put(`/api/recipes/recipe/${id}`, recipe).then(() => navigate("/"))
+        axios.put(`/api/recipes/recipe/${id}`, recipe)
+            .then(() => navigate("/"))
+            .catch(() => setError("Recipe could not be saved"))
     }
 
-    if (!recipe) return null
+    if (!recipe) return error && <p className="m-3">{error}</p>
 
     return (
         <Form className="m-3" onSubmit={handleSubmit}>
@@ -38,6 +43,7 @@ function EditRecipe() {
                 <Form.Label>Image URL:</Form.Label>
                 <Form.Control name="imageUrl" value={recipe.imageUrl} onChange={handleChange}/>
             </Form.Group>
+            {error && <p>{error}</p>}
             <Button variant="primary" type="submit">Save</Button>
         </Form>
     )

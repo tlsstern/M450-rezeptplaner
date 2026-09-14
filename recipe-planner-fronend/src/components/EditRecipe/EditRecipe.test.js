@@ -22,3 +22,16 @@ test('loads the recipe and saves the changed name', async () => {
 
     await waitFor(() => expect(axios.put).toHaveBeenCalledWith('/api/recipes/recipe/1', {...recipe, name: 'Pizza'}));
 });
+
+test('shows a message when the recipe does not exist', async () => {
+    axios.get.mockRejectedValue(new Error('Request failed with status code 404'));
+    render(
+        <MemoryRouter initialEntries={['/edit/unknown']}>
+            <Routes>
+                <Route path="/edit/:id" element={<EditRecipe/>}/>
+            </Routes>
+        </MemoryRouter>
+    );
+
+    expect(await screen.findByText('Recipe not found')).toBeInTheDocument();
+});
