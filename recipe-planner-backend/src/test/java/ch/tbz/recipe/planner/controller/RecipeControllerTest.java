@@ -119,7 +119,9 @@ class RecipeControllerTest {
     @Test
     void updateRecipe_amountZero_returnsBadRequest() throws Exception {
         mockMvc.perform(put("/api/recipes/" + UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"Lasagne\", \"ingredients\": [{\"name\": \"Tomato\", \"unit\": \"PIECE\", \"amount\": 0}]}"))
+                        .content("""
+                                {"name": "Lasagne", "ingredients": [{"name": "Tomato", "unit": "PIECE", "amount": 0}]}
+                                """))
                 .andExpect(status().isBadRequest());
 
         verify(service, never()).updateRecipe(any(), any());
@@ -128,7 +130,9 @@ class RecipeControllerTest {
     @Test
     void updateRecipe_ingredientWithoutName_returnsBadRequest() throws Exception {
         mockMvc.perform(put("/api/recipes/" + UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\": \"Lasagne\", \"ingredients\": [{\"name\": \"\", \"unit\": \"PIECE\", \"amount\": 1}]}"))
+                        .content("""
+                                {"name": "Lasagne", "ingredients": [{"name": "", "unit": "PIECE", "amount": 1}]}
+                                """))
                 .andExpect(status().isBadRequest());
 
         verify(service, never()).updateRecipe(any(), any());
