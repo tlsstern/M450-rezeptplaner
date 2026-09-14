@@ -28,3 +28,13 @@ test('does not send a recipe without name', async () => {
     expect(await screen.findByText('Name is required')).toBeInTheDocument();
     expect(addRecipe).not.toHaveBeenCalled();
 });
+
+test('shows an error when the recipe could not be saved', async () => {
+    addRecipe.mockRejectedValue(new Error('Request failed'));
+    render(<MemoryRouter><AddRecipe/></MemoryRouter>);
+
+    fireEvent.change(screen.getByLabelText('Recipe Name:'), {target: {value: 'Pizza'}});
+    fireEvent.click(screen.getByText('Submit'));
+
+    expect(await screen.findByText('Recipe could not be saved')).toBeInTheDocument();
+});

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './AddRecipe.css';
 import { useFieldArray, useForm } from "react-hook-form";
 import {Form, Button, Col, Row} from 'react-bootstrap';
@@ -9,6 +9,7 @@ import {addRecipe} from "../../apis/recipeApi";
 
 function AddRecipe() {
     const navigate = useNavigate()
+    const [error, setError] = useState(null)
 
     const {
         register,
@@ -20,7 +21,9 @@ function AddRecipe() {
     const {fields, append, remove} = useFieldArray({control, name: "ingredients"})
 
     const onSubmit = (data) => {
-        addRecipe(data).then(() => navigate("/"))
+        addRecipe(data)
+            .then(() => navigate("/"))
+            .catch(() => setError("Recipe could not be saved"))
     }
 
     const renderIngredients = fields.map((field, index) => <AddIngredient
@@ -65,6 +68,7 @@ function AddRecipe() {
                             className="mt-1"
                             >Add Ingredient</Button>
                     </Row>
+                    {error && <p>{error}</p>}
                     <Button variant="primary"  type="submit" className="mb-5">
                         Submit
                     </Button>
