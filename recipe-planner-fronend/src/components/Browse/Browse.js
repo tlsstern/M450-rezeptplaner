@@ -30,8 +30,9 @@ const Browse = () => {
             <>
                 <Row>
                     {post.map((d) => (
-                        <Col sm={12} md={6} lg={4} xl={3}>
-                            <Recipe title={d.name} description={d.description} image={d.imageUrl} onEdit={() => setEditRecipe(d)} />
+                        <Col key={d.id} sm={12} md={6} lg={4} xl={3}>
+                            <Recipe title={d.name} description={d.description} image={d.imageUrl}
+                                    onEdit={() => setEditRecipe(d)} />
                         </Col>
                     ))}
                 </Row>

@@ -4,6 +4,7 @@ import {useForm} from "react-hook-form";
 import {updateRecipe} from "../../apis/recipeApi";
 
 function EditRecipeModal({recipe, onClose, onSaved}) {
+    // values instead of defaultValues, so the form is filled again when another recipe is opened
     const {register, handleSubmit, formState: {errors}} = useForm({values: recipe})
     const [error, setError] = useState(null)
 
