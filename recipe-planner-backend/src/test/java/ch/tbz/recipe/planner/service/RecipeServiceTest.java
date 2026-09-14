@@ -66,7 +66,6 @@ class RecipeServiceTest {
     @Test
     void updateRecipe_emptyName_throwsBadRequest() {
         UUID id = UUID.randomUUID();
-        when(repository.findById(id)).thenReturn(Optional.of(new RecipeEntity()));
         Recipe recipe = new Recipe(null, " ", "Description", "http://image.url", List.of());
 
         assertThatThrownBy(() -> service.updateRecipe(id, recipe))

@@ -38,11 +38,11 @@ public class RecipeService {
     }
 
     public Recipe updateRecipe(UUID recipeId, Recipe recipe) {
-        if (repository.findById(recipeId).isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
-        }
         if (recipe.getName() == null || recipe.getName().isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name must not be empty");
+        }
+        if (repository.findById(recipeId).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found");
         }
         recipe.setId(recipeId);
         var updatedRecipe = repository.save(mapper.domainToEntity(recipe));
