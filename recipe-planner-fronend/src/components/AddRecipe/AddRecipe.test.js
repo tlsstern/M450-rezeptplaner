@@ -3,8 +3,7 @@ import {MemoryRouter} from "react-router-dom";
 import axios from "axios";
 import AddRecipe from "./AddRecipe";
 
-// axios is an es module, jest can't load it without the factory
-jest.mock('axios', () => ({post: jest.fn()}));
+jest.mock('axios');
 
 test('sends the new recipe to the backend', async () => {
     axios.post.mockResolvedValue({data: {}});

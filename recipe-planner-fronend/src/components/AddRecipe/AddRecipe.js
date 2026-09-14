@@ -8,7 +8,6 @@ import AddIngredient from "../AddIngredient/AddIngredient";
 
 function AddRecipe() {
     const navigate = useNavigate()
-    const [ ingredients, setIngredients ] = useState([])
     const [formData, setFormData] = useState({
         "name": '',
         "description": '',
@@ -62,7 +61,6 @@ function AddRecipe() {
     const renderIngredients = formData.ingredients.map(ingredient => <AddIngredient
         key={ingredient.listId}
         ingredient={ingredient}
-        ingredients={ingredients}
         listId={listId - 1}
         updateIngredient={updateIngredient}
         removeIngredient={removeIngredient}

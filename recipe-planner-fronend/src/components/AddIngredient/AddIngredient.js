@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './AddIngredient.css';
 import {Button, Col, Form, Row} from "react-bootstrap";
 
-const AddIngredient = ({ingredients, ingredient, updateIngredient, removeIngredient}) => {
+const AddIngredient = ({ingredient, updateIngredient, removeIngredient}) => {
 
     return (
         <Row>
