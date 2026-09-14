@@ -17,6 +17,7 @@ function AddRecipe() {
     })
 
     const [listId, setListId] = useState(1)
+    const [error, setError] = useState(null)
 
     const handleChange = (e) => {
         setFormData({...formData, [e.target.name]: e.target.value})
@@ -53,7 +54,9 @@ function AddRecipe() {
     const handleSubmit = (e) => {
         e.preventDefault()
         const recipe = {...formData, ingredients: formData.ingredients.map(i => ({name: i.name, unit: i.unit, amount: Number(i.amount)}))}
-        axios.post("/api/recipes", recipe).then(() => navigate("/"))
+        axios.post("/api/recipes", recipe)
+            .then(() => navigate("/"))
+            .catch(() => setError("Recipe could not be saved"))
     }
 
     const renderIngredients = formData.ingredients.map(ingredient => <AddIngredient
@@ -99,6 +102,7 @@ function AddRecipe() {
                             className="mt-1"
                             >Add Ingredient</Button>
                     </Row>
+                    {error && <p>{error}</p>}
                     <Button variant="primary"  type="submit" className="mb-5">
                         Submit
                     </Button>

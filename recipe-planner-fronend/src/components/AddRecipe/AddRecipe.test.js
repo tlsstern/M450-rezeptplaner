@@ -17,3 +17,12 @@ test('sends the new recipe to the backend', async () => {
     await waitFor(() => expect(axios.post).toHaveBeenCalledWith('/api/recipes',
         {name: 'Pizza', description: 'With cheese', imageUrl: '', ingredients: []}));
 });
+
+test('shows an error when the recipe could not be saved', async () => {
+    axios.post.mockRejectedValue(new Error('Request failed'));
+    render(<MemoryRouter><AddRecipe/></MemoryRouter>);
+
+    fireEvent.click(screen.getByText('Submit'));
+
+    expect(await screen.findByText('Recipe could not be saved')).toBeInTheDocument();
+});
