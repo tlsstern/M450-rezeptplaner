@@ -27,3 +27,12 @@ test('does not save without name', async () => {
     expect(await screen.findByText('Name is required')).toBeInTheDocument();
     expect(updateRecipe).not.toHaveBeenCalled();
 });
+
+test('shows an error when saving fails', async () => {
+    updateRecipe.mockRejectedValue(new Error('Request failed with status code 404'));
+    render(<EditRecipeModal recipe={recipe} onClose={jest.fn()} onSaved={jest.fn()}/>);
+
+    fireEvent.click(screen.getByText('Save'));
+
+    expect(await screen.findByText('Recipe could not be saved')).toBeInTheDocument();
+});

@@ -1,13 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import {useForm} from "react-hook-form";
 import {updateRecipe} from "../../apis/recipeApi";
 
 function EditRecipeModal({recipe, onClose, onSaved}) {
     const {register, handleSubmit, formState: {errors}} = useForm({values: recipe})
+    const [error, setError] = useState(null)
 
     const onSubmit = (data) => {
-        updateRecipe(recipe.id, data).then(response => onSaved(response.data))
+        updateRecipe(recipe.id, data)
+            .then(response => onSaved(response.data))
+            .catch(() => setError("Recipe could not be saved"))
     }
 
     return (
@@ -30,6 +33,7 @@ function EditRecipeModal({recipe, onClose, onSaved}) {
                         <Form.Label>Image URL:</Form.Label>
                         <Form.Control {...register("imageUrl")}/>
                     </Form.Group>
+                    {error && <p>{error}</p>}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={onClose}>Cancel</Button>
