@@ -124,4 +124,13 @@ class RecipeControllerTest {
 
         verify(service, never()).updateRecipe(any(), any());
     }
+
+    @Test
+    void updateRecipe_ingredientWithoutName_returnsBadRequest() throws Exception {
+        mockMvc.perform(put("/api/recipes/" + UUID.randomUUID()).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"Lasagne\", \"ingredients\": [{\"name\": \"\", \"unit\": \"PIECE\", \"amount\": 1}]}"))
+                .andExpect(status().isBadRequest());
+
+        verify(service, never()).updateRecipe(any(), any());
+    }
 }
