@@ -1,6 +1,8 @@
 package ch.tbz.recipe.planner.domain;
 
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,8 +16,9 @@ import java.util.UUID;
 public class Recipe {
 
     private UUID id;
+    @NotBlank
     private String name;
     private String description;
     private String imageUrl;
-    private List<Ingredient> ingredients;
+    private List<@Valid Ingredient> ingredients;
 }
