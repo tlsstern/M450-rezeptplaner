@@ -10,16 +10,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -79,5 +83,38 @@ class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id.toString()))
                 .andExpect(jsonPath("$.name").value("Lasagne"));
+    }
+
+    @Test
+    void updateRecipe_returnsUpdatedRecipe() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(service.updateRecipe(eq(id), any(Recipe.class))).thenReturn(createRecipe(id));
+
+        mockMvc.perform(put("/api/recipes/recipe/" + id).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"Lasagne\", \"ingredients\": []}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id.toString()));
+    }
+
+    @Test
+    void updateRecipe_unknownId_returnsNotFound() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(service.updateRecipe(eq(id), any(Recipe.class)))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Recipe not found"));
+
+        mockMvc.perform(put("/api/recipes/recipe/" + id).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"Lasagne\", \"ingredients\": []}"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateRecipe_emptyName_returnsBadRequest() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(service.updateRecipe(eq(id), any(Recipe.class)))
+                .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name must not be empty"));
+
+        mockMvc.perform(put("/api/recipes/recipe/" + id).contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"\", \"ingredients\": []}"))
+                .andExpect(status().isBadRequest());
     }
 }
