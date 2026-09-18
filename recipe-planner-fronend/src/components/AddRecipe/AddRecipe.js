@@ -1,38 +1,35 @@
 import React, {useState} from 'react';
 import './AddRecipe.css';
-import { useForm } from "react-hook-form";
 import {Form, Button, Col, Row} from 'react-bootstrap';
+import {useNavigate} from "react-router-dom";
 
 import axios from "axios";
 import AddIngredient from "../AddIngredient/AddIngredient";
 
 function AddRecipe() {
-    const [ ingredients, setIngredients ] = useState([])
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({
         "name": '',
         "description": '',
         "imageUrl": '',
-        "ingredients": [],
-        "id": null
+        "ingredients": []
     })
 
     const [listId, setListId] = useState(1)
+    const [error, setError] = useState(null)
 
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: {errors},
-    } = useForm()
+    const handleChange = (e) => {
+        setFormData({...formData, [e.target.name]: e.target.value})
+    }
 
     const addIngredient = () => {
 
         setFormData(({...formData, ingredients: [
                 ...formData.ingredients, {
                     listId: listId,
-                    ingredient: '',
+                    name: '',
                     unit: 'PIECE',
-                    quantity: ''
+                    amount: ''
                 }
             ]}))
         setListId(listId + 1)
@@ -53,10 +50,17 @@ function AddRecipe() {
         setFormData({...formData, ingredients: updatedIngredients})
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        const recipe = {...formData, ingredients: formData.ingredients.map(i => ({name: i.name, unit: i.unit, amount: Number(i.amount)}))}
+        axios.post("/api/recipes", recipe)
+            .then(() => navigate("/"))
+            .catch(() => setError("Recipe could not be saved"))
+    }
+
     const renderIngredients = formData.ingredients.map(ingredient => <AddIngredient
         key={ingredient.listId}
         ingredient={ingredient}
-        ingredients={ingredients}
         listId={listId - 1}
         updateIngredient={updateIngredient}
         removeIngredient={removeIngredient}
@@ -65,17 +69,17 @@ function AddRecipe() {
     return (
         <>
             <div className="bg">
-                <div className="m-3">
+                <Form className="m-3" onSubmit={handleSubmit}>
                     <h1 className="h3 bg-dark text-bg-primary mt-2">Add Recipe</h1>
                     <Form.Group className="mb-1" controlId="formBasicName">
                         <Form.Label>Recipe Name:</Form.Label>
-                        <Form.Control placeholder="Name"/>
+                        <Form.Control placeholder="Name" name="name" value={formData.name} onChange={handleChange}/>
                     </Form.Group><Form.Group className="mb-1" controlId="formBasicDescription">
                         <Form.Label>Description:</Form.Label>
-                        <Form.Control placeholder="Description"/>
+                        <Form.Control placeholder="Description" name="description" value={formData.description} onChange={handleChange}/>
                     </Form.Group><Form.Group className="mb-1 mb-5" controlId="formBasicImageUrl">
                         <Form.Label>Image URL:</Form.Label>
-                        <Form.Control placeholder="URL"/>
+                        <Form.Control placeholder="URL" name="imageUrl" value={formData.imageUrl} onChange={handleChange}/>
                     </Form.Group>
                     <Row>
                         <Col>Ingredient</Col>
@@ -96,10 +100,11 @@ function AddRecipe() {
                             className="mt-1"
                             >Add Ingredient</Button>
                     </Row>
+                    {error && <p>{error}</p>}
                     <Button variant="primary"  type="submit" className="mb-5">
                         Submit
                     </Button>
-                </div>
+                </Form>
 
             </div>
 
