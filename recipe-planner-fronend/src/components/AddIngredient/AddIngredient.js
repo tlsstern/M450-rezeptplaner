@@ -1,20 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './AddIngredient.css';
 import {Button, Col, Form, Row} from "react-bootstrap";
 
-const AddIngredient = ({ingredients, ingredient, updateIngredient, removeIngredient}) => {
+const AddIngredient = ({index, register, removeIngredient}) => {
 
     return (
         <Row>
             <Col>
-                <Form.Group className="mb-1" controlId="formBasicName">
-                    <Form.Control placeholder="Name"/>
+                <Form.Group className="mb-1">
+                    <Form.Control placeholder="Name" {...register(`ingredients.${index}.name`)}/>
                 </Form.Group>
             </Col>
             <Col>
-                <Form.Group className="mb-1" controlId="formBasicUnit">
-                    <Form.Select>
+                <Form.Group className="mb-1">
+                    <Form.Select {...register(`ingredients.${index}.unit`)}>
                         <option>PIECE</option>
                         <option>GRAMM</option>
                         <option>KILOGRAMM</option>
@@ -24,13 +23,14 @@ const AddIngredient = ({ingredients, ingredient, updateIngredient, removeIngredi
                 </Form.Group>
             </Col>
             <Col>
-                <Form.Group className="mb-1" controlId="quantity">
-                    <Form.Control placeholder="Quantity"/>
+                <Form.Group className="mb-1">
+                    <Form.Control type="number" placeholder="Quantity"
+                                  {...register(`ingredients.${index}.amount`, {valueAsNumber: true, required: true, min: 1})}/>
                 </Form.Group>
             </Col>
             <Col xs={1}>
                 <Button
-                    onClick={e => removeIngredient(ingredient)}
+                    onClick={() => removeIngredient(index)}
                     variant='outline-dark'
                     className="mb-1"
                 >x</Button>
@@ -38,9 +38,5 @@ const AddIngredient = ({ingredients, ingredient, updateIngredient, removeIngredi
         </Row>
     )
 }
-
-AddIngredient.propTypes = {};
-
-AddIngredient.defaultProps = {};
 
 export default AddIngredient;
